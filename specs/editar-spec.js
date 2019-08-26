@@ -1,9 +1,9 @@
-//const NovoCadastro = require('../pages/NovoCadastro-page');
+const NovoCadastro = require('../pages/NovoCadastro-page');
 const EditarCadastro = require('../pages/EditarCadastro-page');
 
 describe('Editar Cadastro', () => {
 
-    //const cadastro_page = new NovoCadastro();
+    const cadastro_page = new NovoCadastro();
     const editarCadastro_page = new EditarCadastro();
 
     it('editar usuario', () => {
