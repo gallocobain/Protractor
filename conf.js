@@ -1,3 +1,7 @@
+var HtmlReporter = require('protractor-beautiful-reporter');
+var HTMLReport = require('protractor-html-reporter-2');
+var jasmineReporters = require('jasmine-reporters');
+
 
 exports.config = {
 
@@ -14,6 +18,7 @@ exports.config = {
 
         var EC = protractor.ExpectedCondicions;
 
+        //Relatorio padrão do Protractor
         var JasmineHtmlReporter = require('protractor-jasmine2-html-reporter');
 
         jasmine.getEnv().addReporter(new JasmineHtmlReporter({
@@ -23,7 +28,7 @@ exports.config = {
             cleanDestination: true,
             fixedScreenshotName: true
         }))
-
+        //Configuração do Relatorio Padrão do Protractor
         var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
         jasmine.getEnv().addReporter(new SpecReporter({
@@ -45,8 +50,22 @@ exports.config = {
             }
         }))
 
+        //Relatorio Protractor-beautiful-reporter
+        jasmine.getEnv().addReporter(new HtmlReporter({
+            baseDirectory: 'tmp/screenshots'
+        }).getJasmine2Reporter());
+        var reporter = new HtmlReporter({
+            baseDirectory: 'tmp/screenshots',
+        });
 
+        //Configuração do Relatório Protractor protractor-html-reporter-2
+        jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
+            consolidateAll: true,
+            savePath: './',
+            filePrefix: 'xmlresults'
+        }));
 
+        //Testando gravação dos testes
         // var VideoReporter = require('protractor-video-reporter');
         // jasmine.getEnv().addReporter(new VideoReporter({
         //     baseDirectory: 'C:\\TesteProtractor\\MarkTask\\reports\\videos',
@@ -61,13 +80,21 @@ exports.config = {
         //         'video=screen-capture-recorder',
         //         'title=Google - Mozilla Firefox'
         //     ],
-
-
-
         // }));
-
+        
     },
+    //Plugin para screenshot no protractor-html-reporter-2
+    plugins: [{
+        package: 'jasmine2-protractor-utils',
+        disableHTMLReport: true,
+        disableScreenshot: false,
+        screenshotPath:'./screenshots',
+        screenshotOnExpectFailure:false,
+        screenshotOnSpecFailure:true,
+        clearFoldersBeforeTest: true
+      }],
     
+    //Configuração do Relatório protractor-html-reporter-2
     onComplete: function () {
         var browserName, browserVersion;
         var capsPromise = browser.getCapabilities();
@@ -77,24 +104,23 @@ exports.config = {
             browserVersion = caps.get('version');
             platform = caps.get('platform');
 
-            var HTMLReport = require('protractor-html-reporter-2');
             testConfig = {
-                reportTitle: 'Protractor Test Execution Report',
-                outputPath: './reports',
-                outputFilename: 'index',
-                screenshotPath: './',
+                reportTitle: 'Protractor - Relatório de Execução de Teste',
+                outputPath: './',
+                outputFilename: 'Protractor_Relatorio_Execucao_Teste',
+                screenshotPath: './screenshots',
                 testBrowser: browserName,
                 browserVersion: browserVersion,
                 modifiedSuiteName: false,
-                screenshotsOnlyOnFailure: true,
+                screenshotsOnlyOnFailure: false,
                 testPlatform: platform
             };
-            new HTMLReport().from('./reports' + '/xml/xmlOutput.xml', testConfig);
+            new HTMLReport().from('xmlresults.xml', testConfig);
         });
     },
 
     capabilities: {
-        //'browserName': 'chrome'
-        'browserName': 'firefox'
+        'browserName': 'chrome'
+        //'browserName': 'firefox'
     }
 }
