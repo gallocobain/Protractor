@@ -66,6 +66,7 @@ exports.config = {
         }));
 
         //Testando gravação dos testes
+
         // var VideoReporter = require('protractor-video-reporter');
         // jasmine.getEnv().addReporter(new VideoReporter({
         //     baseDirectory: 'C:\\TesteProtractor\\MarkTask\\reports\\videos',
@@ -120,7 +121,11 @@ exports.config = {
     },
 
     capabilities: {
-        'browserName': 'chrome'
-        //'browserName': 'firefox'
+        'browserName': 'chrome',
+        //'browserName': 'firefox',
+
+        chromeOptions: {
+            args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        },
     }
 }
