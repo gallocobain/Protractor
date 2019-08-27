@@ -10,7 +10,7 @@ describe('Listar Usuario', () => {
 
     it('listar usuario', () => {
        
-        expect(listarUsuario_page.lista.getText()).toContain('AAAAA Teste alteração');
+        expect(listarUsuario_page.lista.getText()).toContain('AAAAA Teste alteraçcão');
         
     });
 });
