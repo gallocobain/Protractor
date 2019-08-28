@@ -19,6 +19,7 @@ exports.config = {
         var EC = protractor.ExpectedCondicions;
 
         //Relatorio padrão do Protractor
+
         var JasmineHtmlReporter = require('protractor-jasmine2-html-reporter');
 
         jasmine.getEnv().addReporter(new JasmineHtmlReporter({
@@ -28,7 +29,9 @@ exports.config = {
             cleanDestination: true,
             fixedScreenshotName: true
         }))
+
         //Configuração do Relatorio Padrão do Protractor
+
         var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
         jasmine.getEnv().addReporter(new SpecReporter({
@@ -51,6 +54,7 @@ exports.config = {
         }))
 
         //Relatorio Protractor-beautiful-reporter
+
         jasmine.getEnv().addReporter(new HtmlReporter({
             baseDirectory: 'tmp/screenshots'
         }).getJasmine2Reporter());
@@ -59,6 +63,7 @@ exports.config = {
         });
 
         //Configuração do Relatório Protractor protractor-html-reporter-2
+
         jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
             consolidateAll: true,
             savePath: './',
@@ -82,20 +87,47 @@ exports.config = {
         //         'title=Google - Mozilla Firefox'
         //     ],
         // }));
-        
+
+        var fs = require('fs-extra');
+
+        //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
+
+        fs.emptyDir('screenshots/', function (err) {
+            console.log(err);
+        });
+
+        jasmine.getEnv().addReporter({
+            specDone: function (result) {
+                if (result.status == 'passed') {
+                    browser.getCapabilities().then(function (caps) {
+                        var browserName = caps.get('browserName');
+
+                        browser.takeScreenshot().then(function (png) {
+                            var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
+                            stream.write(new Buffer(png, 'base64'));
+                            stream.end();
+                        });
+                    });
+                }
+            }
+        });
+
     },
     //Plugin para screenshot no protractor-html-reporter-2
+
     plugins: [{
         package: 'jasmine2-protractor-utils',
         disableHTMLReport: true,
         disableScreenshot: false,
-        screenshotPath:'./screenshots',
-        screenshotOnExpectFailure:false,
-        screenshotOnSpecFailure:true,
+        screenshotPath: './screenshots',
+        screenshotOnExpectFailure: false,
+        screenshotOnSpecFailure: true,
+        takeScreenshots: true,
         clearFoldersBeforeTest: true
-      }],
-    
+    }],
+
     //Configuração do Relatório protractor-html-reporter-2
+
     onComplete: function () {
         var browserName, browserVersion;
         var capsPromise = browser.getCapabilities();
@@ -126,6 +158,6 @@ exports.config = {
 
         chromeOptions: {
             args: ["--headless", "--disable-gpu", "--window-size=800x600"]
-        },
+        }
     }
 }
