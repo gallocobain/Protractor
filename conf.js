@@ -7,7 +7,7 @@ exports.config = {
 
     directConnect: true,
     framework: 'jasmine2',
-    specs: ['specs/*-spec.js'],
+    specs: ['specs/editar-spec.js'],
     baseUrl: 'https://automacaocombatista.herokuapp.com/',
 
     onPrepare: function () {
@@ -88,9 +88,9 @@ exports.config = {
         //     ],
         // }));
 
-        var fs = require('fs-extra');
+         //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
 
-        //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
+        var fs = require('fs-extra');
 
         fs.emptyDir('screenshots/', function (err) {
             console.log(err);
@@ -98,7 +98,17 @@ exports.config = {
 
         jasmine.getEnv().addReporter({
             specDone: function (result) {
-                if (result.status == 'passed') {
+                if (result.status == 'passed'){
+                    browser.getCapabilities().then(function (caps) {
+                        var browserName = caps.get('browserName');
+
+                        browser.takeScreenshot().then(function (png) {
+                            var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
+                            stream.write(new Buffer(png, 'base64'));
+                            stream.end();
+                        });
+                    });
+                } else if (result.status == 'failed'){
                     browser.getCapabilities().then(function (caps) {
                         var browserName = caps.get('browserName');
 
