@@ -1,7 +1,8 @@
 class EditarCadastro {
 
     constructor() {
-        //this.path = 'users/new';
+        this.path = 'users';
+        this.btn_editar =  element(by.css('body > div.row > div > table > tbody > tr:nth-child(1) > td:nth-child(10) > a'));
         this.input_name = element(by.id('user_name'));
         this.input_sobrenome = element(by.id('user_lastname'));
         this.input_email = element(by.id('user_email'));
@@ -12,7 +13,6 @@ class EditarCadastro {
         this.input_idade = element(by.id('user_age'));
         this.btn_criar = element(by.css('input[type=submit]'));
         this.mens_sucesso = element(by.id('notice'));
-        this.btn_editar = element(by.css('.waves-light.blue'));
         this.btn_criarEdicao = element(by.css('.waves-effect.green'));
     };
 
