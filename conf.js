@@ -7,7 +7,7 @@ exports.config = {
 
     directConnect: true,
     framework: 'jasmine2',
-    specs: ['specs/editar-spec.js'],
+    specs: ['specs/*-spec.js'],
     baseUrl: 'https://automacaocombatista.herokuapp.com/',
 
     onPrepare: function () {
