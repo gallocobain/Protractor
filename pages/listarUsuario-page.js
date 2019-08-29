@@ -7,10 +7,6 @@ class ListarUsuario {
         this.lista = element(by.cssContainingText("tr", 'AAAAA Teste alteração'));
     };
 
-    getItem(lista) {
-        browser.wait(this.EC.presenceOf($('#task-board')), TIMEOUT);
-        return  this.lista;
-    }
 
 };
 

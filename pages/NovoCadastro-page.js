@@ -12,6 +12,7 @@ class NovoCadastro {
         this.input_idade = element(by.id('user_age'));
         this.btn_criar = element(by.css('input[type=submit]'));
         this.mens_sucesso = element(by.id('notice'));
+        this.mens_obrigatorioNome = element(by.css('#error_explanation > ul > li:nth-child(1)'));
     };
 
     cadastrarDados(dados) {
