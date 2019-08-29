@@ -167,8 +167,9 @@ exports.config = {
         'browserName': 'chrome',
         //'browserName': 'firefox',
 
-        // chromeOptions: {
-        //     args: ["--headless", "--disable-gpu", "--window-size=800x600"]
-        // }
+        //Configuração para rodar o teste em Headless(Chrome) Obs: (No firefox não esta funcionando)
+        chromeOptions: {
+            args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        }
     }
 }
