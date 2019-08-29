@@ -1,12 +1,14 @@
-const NovoCadastro = require('../pages/NovoCadastro-page');
 const EditarCadastro = require('../pages/EditarCadastro-page');
 
 describe('Editar Cadastro', () => {
 
-    const cadastro_page = new NovoCadastro();
     const editarCadastro_page = new EditarCadastro();
 
-    it('editar usuario', () => {
+    beforeEach(() => {
+        browser.get(editarCadastro_page.path);
+    });
+
+    it('Editar usuario', () => {
 
         var dados = {
             name: 'AAAAA Teste alteração',
@@ -22,5 +24,7 @@ describe('Editar Cadastro', () => {
         editarCadastro_page.editarDados(dados);
 
         expect(editarCadastro_page.mens_sucesso.getText()).toEqual('Seu Usuário foi Atualizado!');
+
+        //browser.sleep(20000);
     });
 });

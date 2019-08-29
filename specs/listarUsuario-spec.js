@@ -4,13 +4,13 @@ describe('Listar Usuario', () => {
 
     const listarUsuario_page = new ListarUsuario();
 
-    beforeAll(() => {
+    beforeEach(() => {
         browser.get(listarUsuario_page.path);
     });
 
-    it('listar usuario', () => {
+    it('Listar usuario', () => {
        
         expect(listarUsuario_page.lista.getText()).toContain('AAAAA Teste alteraçcão');
-        
+        //browser.sleep(10000);
     });
 });
