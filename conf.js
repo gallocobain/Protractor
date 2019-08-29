@@ -97,21 +97,22 @@ exports.config = {
         });
 
         jasmine.getEnv().addReporter({
+            
             specDone: function (result) {
-                if (result.status == 'passed'){
+                if (result.status == 'failed'){
                     browser.getCapabilities().then(function (caps) {
                         var browserName = caps.get('browserName');
-
+                        
                         browser.takeScreenshot().then(function (png) {
                             var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
                             stream.write(new Buffer(png, 'base64'));
                             stream.end();
                         });
                     });
-                } else if (result.status == 'failed'){
+                } else if (result.status == 'passed'){
                     browser.getCapabilities().then(function (caps) {
                         var browserName = caps.get('browserName');
-
+                        
                         browser.takeScreenshot().then(function (png) {
                             var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
                             stream.write(new Buffer(png, 'base64'));
@@ -148,7 +149,7 @@ exports.config = {
             platform = caps.get('platform');
 
             testConfig = {
-                reportTitle: 'Protractor - Relatório de Execução de Teste',
+                reportTitle: 'Protractor - Relatório de Execução de Teste Automatizado',
                 outputPath: './',
                 outputFilename: 'Protractor_Relatorio_Execucao_Teste',
                 screenshotPath: './screenshots',
@@ -166,8 +167,8 @@ exports.config = {
         'browserName': 'chrome',
         //'browserName': 'firefox',
 
-        chromeOptions: {
-            args: ["--headless", "--disable-gpu", "--window-size=800x600"]
-        }
+        // chromeOptions: {
+        //     args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        // }
     }
 }
