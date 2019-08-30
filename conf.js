@@ -20,15 +20,15 @@ exports.config = {
 
         //Relatorio padrão do Protractor
 
-        var JasmineHtmlReporter = require('protractor-jasmine2-html-reporter');
+        // var JasmineHtmlReporter = require('protractor-jasmine2-html-reporter');
 
-        jasmine.getEnv().addReporter(new JasmineHtmlReporter({
-            savePath: 'reports',
-            screenshotsFolder: './shots',
-            takeScreenshots: true,
-            cleanDestination: true,
-            fixedScreenshotName: true
-        }))
+        // jasmine.getEnv().addReporter(new JasmineHtmlReporter({
+        //     savePath: 'reports',
+        //     screenshotsFolder: './shots',
+        //     takeScreenshots: true,
+        //     cleanDestination: true,
+        //     fixedScreenshotName: true
+        // }))
 
         //Configuração do Relatorio Padrão do Protractor
 
@@ -53,22 +53,37 @@ exports.config = {
             }
         }))
 
+        //Relatório Allure que possui Plugin no Jenkis
+        //Comando para instalar um server local para abrir o html: "npm i allure-commandline -g --save-dev"
+        //Comando para rodar: "allure serve"
+
+        var AllureReporter = require('jasmine-allure-reporter');
+        jasmine.getEnv().addReporter(new AllureReporter());
+        jasmine.getEnv().afterEach(function (done) {
+            browser.takeScreenshot().then(function (png) {
+                allure.createAttachment('Screenshot', function () {
+                    return new Buffer(png, 'base64')
+                }, 'image/png')();
+                done();
+            });
+        });
+
         //Relatorio Protractor-beautiful-reporter
 
-        jasmine.getEnv().addReporter(new HtmlReporter({
-            baseDirectory: 'tmp/screenshots'
-        }).getJasmine2Reporter());
-        var reporter = new HtmlReporter({
-            baseDirectory: 'tmp/screenshots',
-        });
+        // jasmine.getEnv().addReporter(new HtmlReporter({
+        //     baseDirectory: 'tmp/screenshots'
+        // }).getJasmine2Reporter());
+        // var reporter = new HtmlReporter({
+        //     baseDirectory: 'tmp/screenshots',
+        // });
 
         //Configuração do Relatório Protractor protractor-html-reporter-2
 
-        jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
-            consolidateAll: true,
-            savePath: './',
-            filePrefix: 'xmlresults'
-        }));
+        // jasmine.getEnv().addReporter(new jasmineReporters.JUnitXmlReporter({
+        //     consolidateAll: true,
+        //     savePath: './',
+        //     filePrefix: 'xmlresults'
+        // }));
 
         //Testando gravação dos testes
 
@@ -88,91 +103,88 @@ exports.config = {
         //     ],
         // }));
 
-        //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
+         //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
 
-        var fs = require('fs-extra');
+        // var fs = require('fs-extra');
 
-        fs.emptyDir('screenshots/', function (err) {
-            console.log(err);
-        });
+        // fs.emptyDir('screenshots/', function (err) {
+        //     console.log(err);
+        // });
 
-        jasmine.getEnv().addReporter({
-
-            specDone: function (result) {
-                if (result.status == 'failed') {
-                    browser.getCapabilities().then(function (caps) {
-                        var browserName = caps.get('browserName');
-
-                        browser.takeScreenshot().then(function (png) {
-                            var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
-                            stream.write(new Buffer(png, 'base64'));
-                            stream.end();
-                        });
-                    });
-                } else if (result.status == 'passed') {
-                    browser.getCapabilities().then(function (caps) {
-                        var browserName = caps.get('browserName');
-
-                        browser.takeScreenshot().then(function (png) {
-                            var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
-                            stream.write(new Buffer(png, 'base64'));
-                            stream.end();
-                        });
-                    });
-                }
-            }
-        });
+        // jasmine.getEnv().addReporter({
+            
+        //     specDone: function (result) {
+        //         if (result.status == 'failed'){
+        //             browser.getCapabilities().then(function (caps) {
+        //                 var browserName = caps.get('browserName');
+                        
+        //                 browser.takeScreenshot().then(function (png) {
+        //                     var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
+        //                     stream.write(new Buffer(png, 'base64'));
+        //                     stream.end();
+        //                 });
+        //             });
+        //         } else if (result.status == 'passed'){
+        //             browser.getCapabilities().then(function (caps) {
+        //                 var browserName = caps.get('browserName');
+                        
+        //                 browser.takeScreenshot().then(function (png) {
+        //                     var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
+        //                     stream.write(new Buffer(png, 'base64'));
+        //                     stream.end();
+        //                 });
+        //             });
+        //         }
+        //     }
+        // });
 
     },
     //Plugin para screenshot no protractor-html-reporter-2
 
-    plugins: [{
-        package: 'jasmine2-protractor-utils',
-        disableHTMLReport: true,
-        disableScreenshot: false,
-        screenshotPath: './screenshots',
-        screenshotOnExpectFailure: false,
-        screenshotOnSpecFailure: true,
-        takeScreenshots: true,
-        clearFoldersBeforeTest: true
-    }],
+    // plugins: [{
+    //     package: 'jasmine2-protractor-utils',
+    //     disableHTMLReport: true,
+    //     disableScreenshot: false,
+    //     screenshotPath: './screenshots',
+    //     screenshotOnExpectFailure: false,
+    //     screenshotOnSpecFailure: true,
+    //     takeScreenshots: true,
+    //     clearFoldersBeforeTest: true
+    // }],
 
     //Configuração do Relatório protractor-html-reporter-2
 
-    onComplete: function () {
-        var browserName, browserVersion;
-        var capsPromise = browser.getCapabilities();
+    // onComplete: function () {
+    //     var browserName, browserVersion;
+    //     var capsPromise = browser.getCapabilities();
 
-        capsPromise.then(function (caps) {
-            browserName = caps.get('browserName');
-            browserVersion = caps.get('version');
-            platform = caps.get('platform');
+    //     capsPromise.then(function (caps) {
+    //         browserName = caps.get('browserName');
+    //         browserVersion = caps.get('version');
+    //         platform = caps.get('platform');
 
-            testConfig = {
-                reportTitle: 'Protractor - Relatório de Execução de Teste Automatizado',
-                outputPath: './',
-                outputFilename: 'Protractor_Relatorio_Execucao_Teste',
-                screenshotPath: './screenshots',
-                testBrowser: browserName,
-                browserVersion: browserVersion,
-                modifiedSuiteName: false,
-                screenshotsOnlyOnFailure: false,
-                testPlatform: platform
-            };
-            new HTMLReport().from('xmlresults.xml', testConfig);
-        });
-    },
+    //         testConfig = {
+    //             reportTitle: 'Protractor - Relatório de Execução de Teste Automatizado',
+    //             outputPath: './',
+    //             outputFilename: 'Protractor_Relatorio_Execucao_Teste',
+    //             screenshotPath: './screenshots',
+    //             testBrowser: browserName,
+    //             browserVersion: browserVersion,
+    //             modifiedSuiteName: false,
+    //             screenshotsOnlyOnFailure: false,
+    //             testPlatform: platform
+    //         };
+    //         new HTMLReport().from('xmlresults.xml', testConfig);
+    //     });
+    // },
 
     capabilities: {
-        //'browserName': 'chrome',
+        'browserName': 'chrome',
+        //'browserName': 'firefox',
 
-        //Configuração para rodar o teste em Headless(Chrome)
+        //Configuração para rodar o teste em Headless(Chrome) Obs: (No firefox não esta funcionando)
         // chromeOptions: {
         //     args: ["--headless", "--disable-gpu", "--window-size=800x600"]
         // }
-        'browserName': 'firefox',
-        'moz:firefoxOptions': {
-            args: ["--headless"]
-        }
     }
 }
