@@ -88,7 +88,7 @@ exports.config = {
         //     ],
         // }));
 
-         //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
+        //Configuração para pegar as screenshots com sucesso no Relatório protractor-html-reporter-2
 
         var fs = require('fs-extra');
 
@@ -97,22 +97,22 @@ exports.config = {
         });
 
         jasmine.getEnv().addReporter({
-            
+
             specDone: function (result) {
-                if (result.status == 'failed'){
+                if (result.status == 'failed') {
                     browser.getCapabilities().then(function (caps) {
                         var browserName = caps.get('browserName');
-                        
+
                         browser.takeScreenshot().then(function (png) {
                             var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
                             stream.write(new Buffer(png, 'base64'));
                             stream.end();
                         });
                     });
-                } else if (result.status == 'passed'){
+                } else if (result.status == 'passed') {
                     browser.getCapabilities().then(function (caps) {
                         var browserName = caps.get('browserName');
-                        
+
                         browser.takeScreenshot().then(function (png) {
                             var stream = fs.createWriteStream('screenshots/' + browserName + '-' + result.fullName + '.png');
                             stream.write(new Buffer(png, 'base64'));
@@ -164,12 +164,15 @@ exports.config = {
     },
 
     capabilities: {
-        'browserName': 'chrome',
-        //'browserName': 'firefox',
+        //'browserName': 'chrome',
 
-        //Configuração para rodar o teste em Headless(Chrome) Obs: (No firefox não esta funcionando)
-        chromeOptions: {
-            args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        //Configuração para rodar o teste em Headless(Chrome)
+        // chromeOptions: {
+        //     args: ["--headless", "--disable-gpu", "--window-size=800x600"]
+        // }
+        'browserName': 'firefox',
+        'moz:firefoxOptions': {
+            args: ["--headless"]
         }
     }
 }
